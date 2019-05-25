@@ -4,10 +4,30 @@ import '../App.css';
 import { Route } from 'react-router-dom'
 import SecretArea from './SecretArea'
 import Callback from './Callback'
+import MainLogin from './MainLogin'
+import NotFound from './NotFound'
+
 
 
 class App extends React.Component {
+
   render(){
+
+    let mainComponent = "";
+    switch(this.props.location) {
+      case "":
+        mainComponent = <MainLogin {...this.props}/>;
+        break;
+      case "callback":
+        mainComponent = <Callback />;
+        break;
+      case "secret-area":
+        mainComponent = this.props.auth.isAuthenticated() ? <SecretArea /> : <NotFound />;
+        break
+      default:
+        mainComponent = <NotFound />
+    }
+
     return (
       <div className="App">
         <header className="App-header">
@@ -15,9 +35,7 @@ class App extends React.Component {
           <p>
             React and Auth0 App
           </p>
-          <h1>LOGIN</h1>
-          <Route exact path="/secret-area" render={props => <SecretArea /> } />
-          <Route exact path="/secret-area" render={props => <Callback /> } />
+          {mainComponent}
         </header>
       </div>
     )
